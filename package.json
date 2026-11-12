@@ -1,0 +1,19 @@
+{
+  "name": "herculaneum",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser extension: download your HubScuola books as a single PDF from the reader page.",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "fflate": "^0.8.2",
+    "pdf-lib": "^1.17.1",
+    "sql.js": "^1.13.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

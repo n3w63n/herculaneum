@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Herculaneum",
+  "version": "0.1.0",
+  "description": "Download your HubScuola book as a single PDF directly from the reader page.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": ["storage", "downloads", "webRequest"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "host_permissions": ["https://*.hubscuola.it/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.hubscuola.it/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["sql-wasm-browser.wasm"],
+      "matches": ["https://*.hubscuola.it/*"]
+    }
+  ]
+}
