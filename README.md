@@ -52,8 +52,11 @@ reader.
   Expect to iterate: check the service worker console (`chrome://extensions` →
   service worker) if a download fails.
 - The final PDF is handed to `chrome.downloads` as a `data:` URL (service
-  workers can't create blob URLs). Very large books mean a large base64 string;
-  if that ever fails, the fix is an offscreen document.
+  workers can't create blob URLs) with the target filename embedded in the URL
+  and enforced via `downloads.onDeterminingFilename`. Very large books mean a
+  large base64 string; source chapters totalling over ~300 MB are rejected
+  before merge rather than risking an out-of-memory crash (an offscreen
+  document would lift the cap).
 - Token expires with your session; if you get "Sessione non trovata", reload
   the reader page, browse a couple of pages, retry.
 - Chapter zips are fetched sequentially (polite to the server; slower).

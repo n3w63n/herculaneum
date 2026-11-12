@@ -5,6 +5,7 @@ import {
   tokenFromUrl,
   platformFromHost,
   viewerFromLocation,
+  validVolumeId,
 } from "../src/lib/token.js";
 
 test("tokenFromHeaders finds Token-Session case-insensitively", () => {
@@ -23,6 +24,7 @@ test("tokenFromUrl reads the tokenId query param", () => {
     "t/x"
   );
   assert.equal(tokenFromUrl("https://example.com/"), null);
+  assert.equal(tokenFromUrl("https://x/?tokenId=%zz"), null, "malformed % must not throw");
 });
 
 test("platformFromHost maps kids subdomain", () => {
@@ -37,4 +39,14 @@ test("viewerFromLocation extracts volumeId from the reader URL", () => {
     volumeId: "abc-123",
   });
   assert.equal(viewerFromLocation("kids.hubscuola.it", "/library"), null);
+});
+
+test("viewerFromLocation rejects crafted or malformed volumeIds", () => {
+  // %2F reintroduces a slash after decoding — must not reach URL construction
+  assert.equal(viewerFromLocation("young.hubscuola.it", "/viewer/bad%2F..%2Fadmin"), null);
+  assert.equal(viewerFromLocation("young.hubscuola.it", "/viewer/100%zz"), null, "malformed %");
+  assert.equal(viewerFromLocation("young.hubscuola.it", "/viewer/"), null);
+  assert.ok(validVolumeId("5f78d2a1-4b3c_4d5e.9"));
+  assert.ok(!validVolumeId("../etc"));
+  assert.ok(!validVolumeId(""));
 });

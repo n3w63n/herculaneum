@@ -14,25 +14,35 @@ function setStatus(text) {
 
 function ensureUi() {
   if (ui) return;
+  // Shadow root isolates the widget from host-page CSS (and vice versa).
+  const host = document.createElement("div");
+  host.style.cssText = "display:contents";
+  const root = host.attachShadow({ mode: "open" });
+
   const wrap = document.createElement("div");
   wrap.style.cssText =
     "position:fixed;right:16px;bottom:16px;z-index:2147483647;" +
     "display:flex;flex-direction:column;gap:6px;align-items:flex-end;" +
     "font-family:system-ui,sans-serif;";
   const btn = document.createElement("button");
-  btn.textContent = "⬇ Scarica PDF";
+  const icon = document.createElement("span");
+  icon.textContent = "⬇";
+  icon.setAttribute("aria-hidden", "true"); // decorative: keep out of the name
+  btn.append(icon, document.createTextNode(" Scarica PDF"));
   btn.style.cssText =
     "padding:10px 14px;border-radius:8px;border:0;background:#1a73e8;" +
     "color:#fff;font-size:14px;font-weight:600;cursor:pointer;" +
     "box-shadow:0 2px 8px rgba(0,0,0,.3);";
   const status = document.createElement("div");
+  status.setAttribute("role", "status"); // WCAG 4.1.3: announce result/errors
   status.style.cssText =
     "padding:6px 10px;border-radius:6px;background:rgba(0,0,0,.75);" +
     "color:#fff;font-size:12px;max-width:300px;display:none;";
   btn.addEventListener("click", start);
   wrap.append(btn, status);
-  document.documentElement.appendChild(wrap);
-  ui = { wrap, btn, status };
+  root.appendChild(wrap);
+  document.documentElement.appendChild(host);
+  ui = { host, btn, status };
 }
 
 async function start() {
@@ -67,7 +77,7 @@ function tick() {
     current = info;
     ensureUi();
   } else if (ui) {
-    ui.wrap.remove();
+    ui.host.remove();
     ui = null;
     current = null;
   }
