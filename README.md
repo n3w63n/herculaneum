@@ -1,5 +1,8 @@
 # Herculaneum — HubScuola downloader (browser extension)
 
+> 📖 **[Guida all'installazione con immagini](INSTALL.md)** — per chi non è
+> esperto: 7 passaggi illustrati, senza usare la riga di comando.
+
 Standalone Chrome/Chromium extension that adds a **"⬇ Scarica PDF"** button to the
 HubScuola reader page (`https://young.hubscuola.it/viewer/<volumeId>` or
 `kids.hubscuola.it`) and downloads the whole book as one merged PDF.
@@ -28,6 +31,9 @@ scope); the code is structured so other providers can be added later.
      `<sanitized title>.pdf`
 
 ## Install (load unpacked)
+
+A prebuilt `dist/` ships in the repo, so non-developers can follow the
+[Italian illustrated guide](INSTALL.md) without Node. To build from source:
 
 1. `npm install && npm run build` (once, in this directory)
 2. Open `chrome://extensions`
